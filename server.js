@@ -24,21 +24,30 @@ let books = [
     // Add more books if you'd like!
 ];
 
-/* Create your REST API here with the following endpoints:
-    'GET /api/books': 'Get all books',
-    'GET /api/books/:id': 'Get a specific book',
-    'POST /api/books': 'Add a new book',
-    'PUT /api/books/:id': 'Update a book',
-    'DELETE /api/books/:id': 'Delete a book'
-*/
+const express = require('express');
+const app = express();
+const port = 3000;
 
+// Middleware to parse JSON requests
+app.use(express.json());
 
+// Only start server when running directly, not when testing
+if (require.main === module) {
+    app.listen(port, () => {
+         console.log(`API server running at http://localhost:${port}`);
+    });
+}
 
-
-
-
-
-
-
-
-
+// Root endpoint - API homepage
+app.get('/', (req, res) => {
+    res.json({ 
+        message: "Welcome to the Library API", 
+        endpoints: { 
+            'GET /api/books': 'Get all books',
+            'GET /api/books/:id': 'Get a specific book',
+            'POST /api/books': 'Add a new book',
+            'PUT /api/books/:id': 'Update a book',
+            'DELETE /api/books/:id': 'Delete a book'
+        } 
+    }); 
+});
