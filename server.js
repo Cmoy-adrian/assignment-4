@@ -51,3 +51,90 @@ app.get('/', (req, res) => {
         } 
     }); 
 });
+
+//  GET /api/books - Get all books
+app.get('/api/books', (req, res) => {
+    // Sends back the books as JSON
+    res.json(books);
+})
+
+// GET /api/books/:id - Get a specific book
+app.get('/api/books/:id', (req, res) => {
+    const bookId = parseInt(req.params.id);
+    const book = books.find(b => b.id === bookId);
+
+    // Return movie if it is found
+    if (book) {
+        res.json(book);
+    } else {
+        res.status(404).json({error: 'Book not found'});
+    }
+    
+})
+
+// POST /api/books - Add a new book
+app.post('/api/books/', (req, res) => {
+    // Extract data from request body
+    const { title, author, genre, copiesAvailable } = req.body;
+
+    // Create new book with generated ID
+    const newBook = {
+        id: books.length + 1,
+        title,
+        author,
+        genre,
+        copiesAvailable
+    }
+
+    // Add to books array
+    books.push(newBook);
+
+    // Return the created movie with 201 status
+    res.status(201).json(newBook);
+})
+
+// PUT /api/books/:id - Update a book
+app.put('/api/books/:id', (req, res) => {
+    const bookId = parseInt(req.params.id);
+    const { title, author, genre, copiesAvailable } = req.body;
+
+    // Find the book to update
+    const bookIndex = books.findIndex(b => b.id === bookId);
+
+    if (bookIndex === -1) {
+        return res.status(404).json({error: 'Book not found'});
+    }
+
+    // Update the movie
+    books[bookIndex] = {
+        id: books.length,
+        title,
+        author,
+        genre,
+        copiesAvailable
+    }
+
+    // Return the updated movie
+    res.json(books[bookIndex]);
+
+})
+
+// DELETE /api/books/:id - Delete a book
+app.delete('/api/books/:id', (req, res) => {
+    const bookId = parseInt(req.params.id);
+
+    // Find the book index
+    const bookIndex = books.findIndex(b => b.id === bookId);
+
+    if (bookIndex === -1) {
+        return res.status(404).json({error: 'Book not found'});
+    }
+
+    // Remove book from array
+    const deletedBook = books.splice(bookIndex, 1)[0];
+
+    // Return the deleted book
+    res.json({ message: 'Book deleted successfully', book: deletedBook });
+})
+
+module.exports = app;
