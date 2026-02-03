@@ -107,7 +107,7 @@ app.put('/api/books/:id', (req, res) => {
 
     // Update the movie
     books[bookIndex] = {
-        id: books.length,
+        id: bookId,
         title,
         author,
         genre,
